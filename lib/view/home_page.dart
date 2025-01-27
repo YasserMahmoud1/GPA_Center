@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gpa_center/semester_page.dart';
+import 'package:gpa_center/view/semester_page.dart';
 
-import 'database_helper.dart';
+import '../core/database/database_helper.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  SqlDb dbHelper = SqlDb();
+  DatabaseHelper dbHelper = DatabaseHelper();
 
   Future<List<Map>> semester() => dbHelper.getSemesterData();
   Future<List<Map>> cumulative() => dbHelper.getCumulativeData();
@@ -171,8 +171,8 @@ class _HomePageState extends State<HomePage> {
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             return InkWell(
-                              onTap: () async{
-                                String value = await Navigator.of(context).push(
+                              onTap: () async {
+                                await Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => SemesterPage(
                                       id: snapshot.data![index]["id"],
@@ -181,9 +181,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
                                 );
-                                setState(() {
-                                  
-                                });
+                                setState(() {});
                               },
                               onLongPress: () {
                                 showModalBottomSheet(
@@ -217,9 +215,9 @@ class _HomePageState extends State<HomePage> {
                                             borderRadius:
                                                 BorderRadius.circular(16),
                                           ),
-                                          onTap: () async{
+                                          onTap: () async {
                                             Navigator.of(context).pop();
-                                            String value = await Navigator.push(
+                                            await Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
@@ -232,9 +230,7 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                               ),
                                             );
-                                            setState(() {
-                                              
-                                            });
+                                            setState(() {});
                                           },
                                           leading: const Icon(Icons
                                               .format_list_bulleted_outlined),
@@ -248,11 +244,11 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                             onTap: () {
                                               Navigator.of(context).pop();
-    
+
                                               nameController.text =
                                                   snapshot.data![index]
                                                       ["semester_name"];
-    
+
                                               showDialog(
                                                 context: context,
                                                 builder: (context) {
@@ -298,9 +294,8 @@ class _HomePageState extends State<HomePage> {
                                                                         nameController
                                                                             .text,
                                                                     id: snapshot
-                                                                            .data![index]
-                                                                        [
-                                                                        "id"],
+                                                                            .data![
+                                                                        index]["id"],
                                                                   );
                                                                 },
                                                               );
@@ -332,8 +327,7 @@ class _HomePageState extends State<HomePage> {
                                           onTap: () {
                                             showDialog(
                                               context: context,
-                                              builder: (context) =>
-                                                  AlertDialog(
+                                              builder: (context) => AlertDialog(
                                                 title: Text(
                                                     "Delete ${snapshot.data![index]["semester_name"]}"),
                                                 content: const Text(
@@ -344,8 +338,8 @@ class _HomePageState extends State<HomePage> {
                                                   FilledButton(
                                                     onPressed: () {
                                                       dbHelper.deleteSemester(
-                                                          snapshot.data![
-                                                              index]["id"]);
+                                                          snapshot.data![index]
+                                                              ["id"]);
                                                       setState(() {});
                                                       Navigator.of(context)
                                                           .pop();
@@ -389,8 +383,8 @@ class _HomePageState extends State<HomePage> {
                               child: Container(
                                 height: 60,
                                 width: double.infinity,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFA188C0),
                                   borderRadius: BorderRadius.circular(16),

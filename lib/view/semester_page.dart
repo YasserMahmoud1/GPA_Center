@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'database_helper.dart';
+import '../core/database/database_helper.dart';
 
 class SemesterPage extends StatefulWidget {
   const SemesterPage({super.key, required this.id, required this.semesterName});
@@ -17,7 +17,7 @@ class _SemesterPageState extends State<SemesterPage> {
   final int id;
   final String semesterName;
 
-  SqlDb dbHelper = SqlDb();
+  DatabaseHelper dbHelper = DatabaseHelper();
 
   Future<List<Map>> course() => dbHelper.getCourseData(id);
   Future<List<Map>> total() => dbHelper.getSemesterGradeData(id);
@@ -59,7 +59,6 @@ class _SemesterPageState extends State<SemesterPage> {
       onWillPop: () async {
         Navigator.pop(context, "true");
         return Future.value(false);
-
       },
       child: Scaffold(
         appBar: AppBar(
@@ -160,13 +159,11 @@ class _SemesterPageState extends State<SemesterPage> {
         ),
         body: FutureBuilder(
           future: course(),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<Map>> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<List<Map>> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.isEmpty) {
                 return Center(
-                    child:
-                        Text("No courses was added to $semesterName yet"));
+                    child: Text("No courses was added to $semesterName yet"));
               } else {
                 return Padding(
                   padding: const EdgeInsets.all(16),
@@ -324,17 +321,15 @@ class _SemesterPageState extends State<SemesterPage> {
                                           ),
                                           onTap: () {
                                             Navigator.of(context).pop();
-                                            nameController.text =
-                                                snapshot.data![index]
-                                                    ["course_name"];
+                                            nameController.text = snapshot
+                                                .data![index]["course_name"];
                                             creditHoursController.text =
                                                 snapshot.data![index]
                                                         ["credit_hours"]
                                                     .toString();
-                                            percentageController.text =
-                                                snapshot.data![index]
-                                                        ["percentage"]
-                                                    .toString();
+                                            percentageController.text = snapshot
+                                                .data![index]["percentage"]
+                                                .toString();
                                             showDialog(
                                               context: context,
                                               builder: (context) {
@@ -344,8 +339,8 @@ class _SemesterPageState extends State<SemesterPage> {
                                                     shape:
                                                         RoundedRectangleBorder(
                                                       borderRadius:
-                                                          BorderRadius
-                                                              .circular(20),
+                                                          BorderRadius.circular(
+                                                              20),
                                                     ),
                                                     title: const Text(
                                                         "Add New Course"),
@@ -363,8 +358,7 @@ class _SemesterPageState extends State<SemesterPage> {
                                                             border:
                                                                 OutlineInputBorder(),
                                                           ),
-                                                          validator:
-                                                              (value) {
+                                                          validator: (value) {
                                                             if (value!
                                                                 .isEmpty) {
                                                               return 'Coutse Name must not be empty';
@@ -384,8 +378,7 @@ class _SemesterPageState extends State<SemesterPage> {
                                                             border:
                                                                 OutlineInputBorder(),
                                                           ),
-                                                          validator:
-                                                              (value) {
+                                                          validator: (value) {
                                                             if (value!
                                                                 .isEmpty) {
                                                               return 'Credit Hours must not be empty';
@@ -410,8 +403,7 @@ class _SemesterPageState extends State<SemesterPage> {
                                                             border:
                                                                 OutlineInputBorder(),
                                                           ),
-                                                          validator:
-                                                              (value) {
+                                                          validator: (value) {
                                                             if (value!
                                                                 .isEmpty) {
                                                               return 'Percentage must not be empty';
@@ -450,9 +442,10 @@ class _SemesterPageState extends State<SemesterPage> {
                                                               creditHour: int.parse(
                                                                   creditHoursController
                                                                       .text),
-                                                              percentage: double.parse(
-                                                                  percentageController
-                                                                      .text),
+                                                              percentage:
+                                                                  double.parse(
+                                                                      percentageController
+                                                                          .text),
                                                               grade: getGrade(
                                                                   percentageController
                                                                       .text),
@@ -463,8 +456,8 @@ class _SemesterPageState extends State<SemesterPage> {
                                                                 .pop();
                                                           }
                                                         },
-                                                        child: const Text(
-                                                            "Done"),
+                                                        child:
+                                                            const Text("Done"),
                                                       )
                                                     ],
                                                   ),
@@ -485,21 +478,19 @@ class _SemesterPageState extends State<SemesterPage> {
                                           onTap: () {
                                             showDialog(
                                               context: context,
-                                              builder: (context) =>
-                                                  AlertDialog(
+                                              builder: (context) => AlertDialog(
                                                 title: Text(
                                                     "Delete ${snapshot.data![index]["course_name"]}"),
                                                 content: const Text(
                                                   "Are you sure you want to delete this course?\nYou will not be able to recover it again",
-                                                  textAlign:
-                                                      TextAlign.center,
+                                                  textAlign: TextAlign.center,
                                                 ),
                                                 actions: [
                                                   FilledButton(
                                                     onPressed: () {
                                                       dbHelper.deleteCourse(
-                                                          snapshot.data![
-                                                              index]["id"]);
+                                                          snapshot.data![index]
+                                                              ["id"]);
                                                       setState(() {});
                                                       Navigator.of(context)
                                                           .pop();
@@ -510,16 +501,14 @@ class _SemesterPageState extends State<SemesterPage> {
                                                           .showSnackBar(
                                                               const SnackBar(
                                                         backgroundColor:
-                                                            Color(
-                                                                0xFFE8D7FF),
-                                                        content: Text(
-                                                            "Deleted!"),
+                                                            Color(0xFFE8D7FF),
+                                                        content:
+                                                            Text("Deleted!"),
                                                         duration: Duration(
                                                             seconds: 1),
                                                       ));
                                                     },
-                                                    child:
-                                                        const Text("Yes"),
+                                                    child: const Text("Yes"),
                                                   ),
                                                   FilledButton(
                                                     onPressed: () {
@@ -546,8 +535,8 @@ class _SemesterPageState extends State<SemesterPage> {
                               child: Container(
                                 height: 60,
                                 width: double.infinity,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFA188C0),
                                   borderRadius: BorderRadius.circular(16),
@@ -590,10 +579,8 @@ class _SemesterPageState extends State<SemesterPage> {
                                               width: 40,
                                               decoration: BoxDecoration(
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        10),
-                                                color:
-                                                    const Color(0xFFE8D7FF),
+                                                    BorderRadius.circular(10),
+                                                color: const Color(0xFFE8D7FF),
                                               ),
                                               child: Center(
                                                   child: Text(
@@ -610,10 +597,8 @@ class _SemesterPageState extends State<SemesterPage> {
                                               width: 40,
                                               decoration: BoxDecoration(
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        10),
-                                                color:
-                                                    const Color(0xFFE8D7FF),
+                                                    BorderRadius.circular(10),
+                                                color: const Color(0xFFE8D7FF),
                                               ),
                                               child: Center(
                                                   child: Text(
